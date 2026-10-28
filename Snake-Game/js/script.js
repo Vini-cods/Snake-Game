@@ -50,6 +50,7 @@ const food = {
 };
 
 let direction, loopId;
+let directionChanged = false;
 
 // Desenha a comida na tela
 const drawFood = () => {
@@ -76,6 +77,7 @@ const drawSnake = () => {
 
 // Move a cobra na direção escolhida
 const moveSnake = () => {
+    directionChanged = false;
     if (!direction) return;
 
     const head = snake[snake.length - 1];
@@ -173,10 +175,14 @@ gameLoop();
 
 // Captura os eventos do teclado para controlar a cobra
 document.addEventListener("keydown", ({ key }) => {
+    if (directionChanged) return;
+
+    const previousDirection = direction;
     if (key == "ArrowRight" && direction != "left") direction = "right";
     if (key == "ArrowLeft" && direction != "right") direction = "left";
     if (key == "ArrowDown" && direction != "up") direction = "down";
     if (key == "ArrowUp" && direction != "down") direction = "up";
+    directionChanged = direction !== previousDirection;
 });
 
 // Reinicia o jogo ao clicar no botão "Jogar novamente"
@@ -185,4 +191,5 @@ buttonPlay.addEventListener("click", () => {
     menu.style.display = "none";
     canvas.style.filter = "none";
     snake = [initialPosition];
+    directionChanged = false;
 });
